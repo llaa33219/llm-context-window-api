@@ -7,7 +7,7 @@ An API for querying AI model context window lengths. On the first request, it ca
 ## Base URL
 
 ```
-https://your-worker.your-account.workers.dev
+https://lcw-api.blp.sh
 ```
 
 ## Endpoints
@@ -27,7 +27,7 @@ Query context window by model name.
 **Example Request**
 
 ```bash
-curl "https://your-worker.your-account.workers.dev/context-window?model=gpt-4"
+curl "https://lcw-api.blp.sh/context-window?model=gpt-4"
 ```
 
 **Success Response (200)**
@@ -102,6 +102,17 @@ wrangler kv:namespace create MODEL_CACHE
 # Update KV id in wrangler.toml, then deploy
 wrangler deploy
 ```
+
+### Custom Domain
+
+The API is deployed at `lcw-api.blp.sh`. To set up a custom domain:
+
+1. Add a CNAME record in Cloudflare DNS:
+   - Type: `CNAME`
+   - Name: `lcw-api`
+   - Target: `llm-context-window-api.your-account.workers.dev`
+
+2. Or use `wrangler deploy` - it will automatically configure the route defined in `wrangler.toml`
 
 ---
 
