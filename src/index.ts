@@ -4,7 +4,6 @@ import { CachedModel } from './types';
 
 interface Env {
   MODEL_CACHE: KVNamespace;
-  ARTIFICIAL_ANALYSIS_API_KEY: string;
 }
 
 export default {
@@ -19,29 +18,10 @@ export default {
 
     if (url.pathname === '/debug' && request.method === 'GET') {
       try {
-        const apiKey = env.ARTIFICIAL_ANALYSIS_API_KEY;
-        
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey
-        };
-
-        const response = await fetch('https://artificialanalysis.ai/api/v2/data/llms/models', { headers });
-        const status = response.status;
-        const statusText = response.statusText;
-        const data = await response.json();
-        
-        const firstItem = Array.isArray(data) ? data[0] : data.data?.[0] || data.models?.[0] || null;
-        const firstItemKeys = firstItem ? Object.keys(firstItem) : null;
-        
+        const models = await fetchAllModels();
         return new Response(JSON.stringify({ 
-          status,
-          statusText,
-          isArray: Array.isArray(data),
-          dataKeys: data && typeof data === 'object' ? Object.keys(data) : null,
-          count: Array.isArray(data) ? data.length : data.data?.length || data.models?.length || 0,
-          firstItemKeys,
-          firstItem
+          count: models.length,
+          sample: models.slice(0, 5).map(m => ({ name: m.name, id: m.id, context_length: m.context_length }))
         }), {
           headers: { 'Content-Type': 'application/json' }
         });
@@ -87,7 +67,7 @@ export default {
           });
         }
 
-        const result = await findModelContextWindow(modelName, env.ARTIFICIAL_ANALYSIS_API_KEY);
+        const result = await findModelContextWindow(modelName);
         
         if (!result) {
           return new Response(JSON.stringify({

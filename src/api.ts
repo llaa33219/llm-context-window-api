@@ -1,32 +1,25 @@
-import { ArtificialAnalysisModel } from './types';
 import { findBestMatch } from './utils';
 
-const API_BASE_URL = 'https://artificialanalysis.ai/api/v2/data/llms/models';
+const API_BASE_URL = 'https://openrouter.ai/api/v1/models';
 
-let modelsCache: ArtificialAnalysisModel[] | null = null;
+interface OpenRouterModel {
+  id: string;
+  name: string;
+  context_length: number;
+}
+
+let modelsCache: OpenRouterModel[] | null = null;
 let cacheTime = 0;
 const CACHE_TTL = 60 * 60 * 1000;
 
-export async function fetchAllModels(apiKey: string): Promise<ArtificialAnalysisModel[]> {
-  if (!apiKey) {
-    throw new Error('ARTIFICIAL_ANALYSIS_API_KEY is required. Get it from https://artificialanalysis.ai');
-  }
-  
+export async function fetchAllModels(): Promise<OpenRouterModel[]> {
   const now = Date.now();
   
   if (modelsCache && (now - cacheTime) < CACHE_TTL) {
     return modelsCache;
   }
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-  
-  if (apiKey) {
-    headers['x-api-key'] = apiKey;
-  }
-
-  const response = await fetch(API_BASE_URL, { headers });
+  const response = await fetch(API_BASE_URL);
   
   if (!response.ok) {
     throw new Error(`Failed to fetch models: ${response.status} ${response.statusText}`);
@@ -34,43 +27,34 @@ export async function fetchAllModels(apiKey: string): Promise<ArtificialAnalysis
 
   const data = await response.json();
   
-  if (Array.isArray(data)) {
-    modelsCache = data;
-  } else if (data.data && Array.isArray(data.data)) {
-    modelsCache = data.data;
-  } else if (data.models && Array.isArray(data.models)) {
-    modelsCache = data.models;
-  } else {
-    modelsCache = [];
-  }
+  modelsCache = data.data || [];
   cacheTime = now;
   
   return modelsCache;
 }
 
 export async function findModelContextWindow(
-  modelName: string,
-  apiKey?: string
+  modelName: string
 ): Promise<{ contextWindow: number; name: string; slug: string; creator: string } | null> {
-  const models = await fetchAllModels(apiKey);
+  const models = await fetchAllModels();
   
-  const match = findBestMatch(modelName, models.map(m => ({ name: m.name, slug: m.slug })));
+  const match = findBestMatch(modelName, models.map(m => ({ name: m.name, slug: m.id })));
   
   if (!match) {
     return null;
   }
 
-  const model = models.find(m => m.slug === match.slug);
+  const model = models.find(m => m.id === match.slug);
   
   if (!model) {
     return null;
   }
 
   return {
-    contextWindow: model.context_window || model.max_tokens || 0,
+    contextWindow: model.context_length,
     name: model.name,
-    slug: model.slug,
-    creator: model.model_creator?.name || ''
+    slug: model.id,
+    creator: model.id.split('/')[0]
   };
 }
 
