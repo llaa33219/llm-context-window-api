@@ -31,13 +31,17 @@ export default {
         const statusText = response.statusText;
         const data = await response.json();
         
+        const firstItem = Array.isArray(data) ? data[0] : data.data?.[0] || data.models?.[0] || null;
+        const firstItemKeys = firstItem ? Object.keys(firstItem) : null;
+        
         return new Response(JSON.stringify({ 
           status,
           statusText,
           isArray: Array.isArray(data),
           dataKeys: data && typeof data === 'object' ? Object.keys(data) : null,
           count: Array.isArray(data) ? data.length : data.data?.length || data.models?.length || 0,
-          firstItem: Array.isArray(data) ? data[0] : data.data?.[0] || data.models?.[0] || null
+          firstItemKeys,
+          firstItem
         }), {
           headers: { 'Content-Type': 'application/json' }
         });
