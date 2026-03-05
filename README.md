@@ -1,6 +1,6 @@
 # Context Window API
 
-An API for querying AI model context window lengths. On the first request, it calls the artificialanalysis.ai API and stores the result in KV. Subsequent requests for the same model return the cached value from KV.
+An API for querying AI model context window lengths. On the first request, it calls the OpenRouter API and stores the result in KV. Subsequent requests for the same model return the cached value from KV.
 
 ![Context Window API](./image.png)
 
@@ -22,12 +22,12 @@ Query context window by model name.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| model | string | Yes | AI model name (e.g., `gpt-5.3-codex`, `claude-opus-4.6`, `gemini-2.0-flash`) |
+| model | string | Yes | AI model name (e.g., `gpt-5.3-codex`, `claude-opus-4-5`, `gemini-2.0-flash`) |
 
 **Example Request**
 
 ```bash
-curl "https://lcw-api.blp.sh/context-window?model=gpt-5.3-codex"
+curl "https://lcw-api.blp.sh/context-window?model=gpt-4o"
 ```
 
 **Success Response (200)**
@@ -36,10 +36,10 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-5.3-codex"
 {
   "success": true,
   "data": {
-    "name": "GPT-5.3 Codex",
-    "contextWindow": 400000,
-    "slug": "openai-gpt-5-3-codex",
-    "creator": "OpenAI",
+    "name": "GPT-4o",
+    "contextWindow": 128000,
+    "slug": "openai/gpt-4o",
+    "creator": "openai",
     "fromCache": false
   }
 }
@@ -51,8 +51,8 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-5.3-codex"
 {
   "success": true,
   "data": {
-    "name": "gpt-4",
-    "contextWindow": 8192,
+    "name": "gpt-4o",
+    "contextWindow": 128000,
     "fromCache": true,
     "lastUpdated": "2024-01-15T10:30:00.000Z"
   }
@@ -64,7 +64,7 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-5.3-codex"
 ```json
 {
   "success": false,
-  "error": "Model not found: gpt-4"
+  "error": "Model not found: unknown-model"
 }
 ```
 
@@ -88,7 +88,7 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-5.3-codex"
 
 **GET** `/debug`
 
-Returns a sample of available models from the API (useful for debugging).
+Returns a sample of available models from the OpenRouter API (useful for debugging).
 
 **Response (200)**
 
@@ -96,8 +96,8 @@ Returns a sample of available models from the API (useful for debugging).
 {
   "count": 200,
   "sample": [
-    { "name": "GPT-4", "slug": "openai-gpt-4" },
-    { "name": "Claude 3.5 Sonnet", "slug": "anthropic-claude-3-5-sonnet" }
+    { "name": "GPT-4o", "id": "openai/gpt-4o", "context_length": 128000 },
+    { "name": "Claude 3.5 Sonnet", "id": "anthropic/claude-3.5-sonnet", "context_length": 200000 }
   ]
 }
 ```
@@ -108,8 +108,8 @@ Returns a sample of available models from the API (useful for debugging).
 
 All of the following inputs are treated as the same model:
 
-- `gpt-4` = `gpt 4` = `GPT-4` = `gpt_4`
-- `claude-3-opus` = `claude 3 opus` = `Claude-3-Opus`
+- `gpt-4o` = `gpt 4o` = `GPT-4O` = `gpt_4o`
+- `claude-opus-4-5` = `claude opus 4 5` = `Claude-Opus-4-5`
 
 ---
 
@@ -138,13 +138,3 @@ With `custom_domain = true`, Cloudflare automatically:
 - Issues SSL certificates
 
 Just run `wrangler deploy` and the domain will be set up automatically.
-
----
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| ARTIFICIAL_ANALYSIS_API_KEY | Yes | artificialanalysis.ai API key (get it from [artificialanalysis.ai](https://artificialanalysis.ai)) |
-
-**Get API Key:** Sign up at [artificialanalysis.ai](https://artificialanalysis.ai) and generate an API key from the Insights Platform. |
