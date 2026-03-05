@@ -2,8 +2,13 @@ export interface ArtificialAnalysisModel {
   id: string;
   name: string;
   slug: string;
-  model_creator: string;
-  context_window: number;
+  model_creator: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  context_window?: number;
+  max_tokens?: number;
   pricing?: {
     input: number;
     output: number;

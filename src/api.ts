@@ -33,7 +33,15 @@ export async function fetchAllModels(apiKey: string): Promise<ArtificialAnalysis
   }
 
   const data = await response.json();
-  modelsCache = data.models || data || [];
+  
+  // API returns an array directly
+  if (Array.isArray(data)) {
+    modelsCache = data;
+  } else if (data.models && Array.isArray(data.models)) {
+    modelsCache = data.models;
+  } else {
+    modelsCache = [];
+  }
   cacheTime = now;
   
   return modelsCache;
@@ -58,10 +66,10 @@ export async function findModelContextWindow(
   }
 
   return {
-    contextWindow: model.context_window,
+    contextWindow: model.context_window || model.max_tokens || 0,
     name: model.name,
     slug: model.slug,
-    creator: model.model_creator
+    creator: model.model_creator?.name || ''
   };
 }
 
