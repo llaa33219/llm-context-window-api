@@ -22,12 +22,12 @@ Query context window by model name.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| model | string | Yes | AI model name (e.g., `gpt-5.3-codex`, `claude-opus-4.6`) |
+| model | string | Yes | AI model name (e.g., `gpt-5.3-codex`, `claude-opus-4.6`, `gemini-2.0-flash`) |
 
 **Example Request**
 
 ```bash
-curl "https://lcw-api.blp.sh/context-window?model=gpt-4"
+curl "https://lcw-api.blp.sh/context-window?model=gpt-5.3-codex"
 ```
 
 **Success Response (200)**
@@ -36,9 +36,9 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-4"
 {
   "success": true,
   "data": {
-    "name": "GPT-4",
-    "contextWindow": 8192,
-    "slug": "openai-gpt-4",
+    "name": "GPT-5.3 Codex",
+    "contextWindow": 400000,
+    "slug": "openai-gpt-5-3-codex",
     "creator": "OpenAI",
     "fromCache": false
   }

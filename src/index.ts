@@ -19,10 +19,25 @@ export default {
 
     if (url.pathname === '/debug' && request.method === 'GET') {
       try {
-        const models = await fetchAllModels(env.ARTIFICIAL_ANALYSIS_API_KEY);
+        const apiKey = env.ARTIFICIAL_ANALYSIS_API_KEY;
+        
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey
+        };
+
+        const response = await fetch('https://artificialanalysis.ai/api/v2/data/llms/models', { headers });
+        const status = response.status;
+        const statusText = response.statusText;
+        const data = await response.json();
+        
         return new Response(JSON.stringify({ 
-          count: models.length,
-          sample: models.slice(0, 5).map(m => ({ name: m.name, slug: m.slug }))
+          status,
+          statusText,
+          isArray: Array.isArray(data),
+          dataKeys: data && typeof data === 'object' ? Object.keys(data) : null,
+          count: Array.isArray(data) ? data.length : data.models?.length || 0,
+          firstItem: Array.isArray(data) ? data[0] : data.models?.[0] || null
         }), {
           headers: { 'Content-Type': 'application/json' }
         });
