@@ -84,6 +84,26 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-4"
 
 ---
 
+### 3. Debug - List Available Models
+
+**GET** `/debug`
+
+Returns a sample of available models from the API (useful for debugging).
+
+**Response (200)**
+
+```json
+{
+  "count": 200,
+  "sample": [
+    { "name": "GPT-4", "slug": "openai-gpt-4" },
+    { "name": "Claude 3.5 Sonnet", "slug": "anthropic-claude-3-5-sonnet" }
+  ]
+}
+```
+
+---
+
 ## Model Name Normalization
 
 All of the following inputs are treated as the same model:

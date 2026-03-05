@@ -1,4 +1,4 @@
-import { findModelContextWindow } from './api';
+import { findModelContextWindow, fetchAllModels } from './api';
 import { createCacheKey } from './utils';
 import { CachedModel } from './types';
 
@@ -15,6 +15,25 @@ export default {
       return new Response(JSON.stringify({ status: 'ok' }), {
         headers: { 'Content-Type': 'application/json' }
       });
+    }
+
+    if (url.pathname === '/debug' && request.method === 'GET') {
+      try {
+        const models = await fetchAllModels(env.ARTIFICIAL_ANALYSIS_API_KEY);
+        return new Response(JSON.stringify({ 
+          count: models.length,
+          sample: models.slice(0, 5).map(m => ({ name: m.name, slug: m.slug }))
+        }), {
+          headers: { 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ 
+          error: error instanceof Error ? error.message : 'Unknown error'
+        }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
     }
 
     if (url.pathname === '/context-window' && request.method === 'GET') {
