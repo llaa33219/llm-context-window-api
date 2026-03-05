@@ -1,0 +1,11 @@
+name = "llm-context-window-api"
+main = "src/index.ts"
+compatibility_date = "2026-03-05"
+node_compat = true
+
+[[kv_namespaces]]
+binding = "MODEL_CACHE"
+id = "e03ec0d26f694104b55524f4a04fe7c8"
+
+[vars]
+ARTIFICIAL_ANALYSIS_API_URL = "https://api.artificialanalysis.ai/data/llms/models"
