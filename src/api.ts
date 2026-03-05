@@ -34,9 +34,10 @@ export async function fetchAllModels(apiKey: string): Promise<ArtificialAnalysis
 
   const data = await response.json();
   
-  // API returns an array directly
   if (Array.isArray(data)) {
     modelsCache = data;
+  } else if (data.data && Array.isArray(data.data)) {
+    modelsCache = data.data;
   } else if (data.models && Array.isArray(data.models)) {
     modelsCache = data.models;
   } else {
