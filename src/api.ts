@@ -1,13 +1,17 @@
 import { ArtificialAnalysisModel } from './types';
 import { findBestMatch } from './utils';
 
-const API_BASE_URL = 'https://api.artificialanalysis.ai/data/llms/models';
+const API_BASE_URL = 'https://artificialanalysis.ai/api/v2/data/llms/models';
 
 let modelsCache: ArtificialAnalysisModel[] | null = null;
 let cacheTime = 0;
 const CACHE_TTL = 60 * 60 * 1000;
 
-export async function fetchAllModels(apiKey?: string): Promise<ArtificialAnalysisModel[]> {
+export async function fetchAllModels(apiKey: string): Promise<ArtificialAnalysisModel[]> {
+  if (!apiKey) {
+    throw new Error('ARTIFICIAL_ANALYSIS_API_KEY is required. Get it from https://artificialanalysis.ai');
+  }
+  
   const now = Date.now();
   
   if (modelsCache && (now - cacheTime) < CACHE_TTL) {

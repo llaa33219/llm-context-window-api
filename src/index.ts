@@ -4,7 +4,7 @@ import { CachedModel } from './types';
 
 interface Env {
   MODEL_CACHE: KVNamespace;
-  ARTIFICIAL_ANALYSIS_API_KEY?: string;
+  ARTIFICIAL_ANALYSIS_API_KEY: string;
 }
 
 export default {

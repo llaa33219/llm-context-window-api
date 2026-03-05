@@ -125,4 +125,6 @@ Just run `wrangler deploy` and the domain will be set up automatically.
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| ARTIFICIAL_ANALYSIS_API_KEY | No | artificialanalysis.ai API key (increases rate limit) |
+| ARTIFICIAL_ANALYSIS_API_KEY | Yes | artificialanalysis.ai API key (get it from [artificialanalysis.ai](https://artificialanalysis.ai)) |
+
+**Get API Key:** Sign up at [artificialanalysis.ai](https://artificialanalysis.ai) and generate an API key from the Insights Platform. |
