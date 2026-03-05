@@ -22,7 +22,7 @@ Query context window by model name.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| model | string | Yes | AI model name (e.g., `gpt-4`, `claude-3-opus`) |
+| model | string | Yes | AI model name (e.g., `gpt-5.3-codex`, `claude-opus-4.6`) |
 
 **Example Request**
 
@@ -105,14 +105,19 @@ wrangler deploy
 
 ### Custom Domain
 
-The API is deployed at `lcw-api.blp.sh`. To set up a custom domain:
+The API uses a custom domain configured in `wrangler.toml`:
 
-1. Add a CNAME record in Cloudflare DNS:
-   - Type: `CNAME`
-   - Name: `lcw-api`
-   - Target: `llm-context-window-api.your-account.workers.dev`
+```toml
+routes = [
+  { pattern = "lcw-api.blp.sh", custom_domain = true }
+]
+```
 
-2. Or use `wrangler deploy` - it will automatically configure the route defined in `wrangler.toml`
+With `custom_domain = true`, Cloudflare automatically:
+- Creates the necessary DNS records
+- Issues SSL certificates
+
+Just run `wrangler deploy` and the domain will be set up automatically.
 
 ---
 

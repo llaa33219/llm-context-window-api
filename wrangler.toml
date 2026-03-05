@@ -4,7 +4,7 @@ compatibility_date = "2026-03-05"
 node_compat = true
 
 routes = [
-  { pattern = "lcw-api.blp.sh", zone_name = "blp.sh" }
+  { pattern = "lcw-api.blp.sh", custom_domain = true }
 ]
 
 [[kv_namespaces]]
