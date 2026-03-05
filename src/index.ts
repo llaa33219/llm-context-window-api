@@ -36,8 +36,8 @@ export default {
           statusText,
           isArray: Array.isArray(data),
           dataKeys: data && typeof data === 'object' ? Object.keys(data) : null,
-          count: Array.isArray(data) ? data.length : data.models?.length || 0,
-          firstItem: Array.isArray(data) ? data[0] : data.models?.[0] || null
+          count: Array.isArray(data) ? data.length : data.data?.length || data.models?.length || 0,
+          firstItem: Array.isArray(data) ? data[0] : data.data?.[0] || data.models?.[0] || null
         }), {
           headers: { 'Content-Type': 'application/json' }
         });
