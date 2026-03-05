@@ -1,6 +1,8 @@
 # Context Window API
 
-AI 모델의 컨텍스트 윈도우 길이를 조회하는 API입니다. 첫 요청 시 artificialanalysis.ai API를 호출하고, 결과를 KV에 저장합니다. 이후 동일한 모델에 대한 요청은 KV에서 캐시된 값을 반환합니다.
+An API for querying AI model context window lengths. On the first request, it calls the artificialanalysis.ai API and stores the result in KV. Subsequent requests for the same model return the cached value from KV.
+
+![Context Window API](./image.png)
 
 ## Base URL
 
@@ -10,9 +12,9 @@ https://your-worker.your-account.workers.dev
 
 ## Endpoints
 
-### 1. 컨텍스트 윈도우 조회
+### 1. Get Context Window
 
-모델 이름을 기반으로 컨텍스트 윈도우를 조회합니다.
+Query context window by model name.
 
 **GET** `/context-window?model={modelName}`
 
@@ -20,7 +22,7 @@ https://your-worker.your-account.workers.dev
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| model | string | Yes | AI 모델 이름 (예: `gpt-4`, `claude-3-opus`) |
+| model | string | Yes | AI model name (e.g., `gpt-4`, `claude-3-opus`) |
 
 **Example Request**
 
@@ -82,29 +84,29 @@ curl "https://your-worker.your-account.workers.dev/context-window?model=gpt-4"
 
 ---
 
-## 모델 이름 정규화
+## Model Name Normalization
 
-다음과 같은 입력 모두 동일한 모델로 처리됩니다:
+All of the following inputs are treated as the same model:
 
 - `gpt-4` = `gpt 4` = `GPT-4` = `gpt_4`
 - `claude-3-opus` = `claude 3 opus` = `Claude-3-Opus`
 
 ---
 
-## 배포
+## Deployment
 
 ```bash
-# KV 네임스페이스 생성
+# Create KV namespace
 wrangler kv:namespace create MODEL_CACHE
 
-# wrangler.toml의 KV id 업데이트 후 배포
+# Update KV id in wrangler.toml, then deploy
 wrangler deploy
 ```
 
 ---
 
-## 환경 변수
+## Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| ARTIFICIAL_ANALYSIS_API_KEY | No | artificialanalysis.ai API 키 (Rate limit 증가) |
+| ARTIFICIAL_ANALYSIS_API_KEY | No | artificialanalysis.ai API key (increases rate limit) |
