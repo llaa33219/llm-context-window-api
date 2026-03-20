@@ -8,7 +8,7 @@ export interface ArtificialAnalysisModel {
     slug: string;
   };
   context_window?: number;
-  max_tokens?: number;
+  max_output_tokens?: number;
   pricing?: {
     input: number;
     output: number;
@@ -19,12 +19,14 @@ export interface ArtificialAnalysisModel {
 export interface ModelInfo {
   name: string;
   contextWindow: number;
+  maxOutputTokens?: number;
   slug: string;
   creator: string;
 }
 
 export interface CachedModel {
   contextWindow: number;
+  maxOutputTokens?: number;
   lastUpdated: string;
 }
 

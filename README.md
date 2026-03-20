@@ -38,6 +38,7 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-4o"
   "data": {
     "name": "GPT-4o",
     "contextWindow": 128000,
+    "maxOutputTokens": 16384,
     "slug": "openai/gpt-4o",
     "creator": "openai",
     "fromCache": false
@@ -53,6 +54,7 @@ curl "https://lcw-api.blp.sh/context-window?model=gpt-4o"
   "data": {
     "name": "gpt-4o",
     "contextWindow": 128000,
+    "maxOutputTokens": 16384,
     "fromCache": true,
     "lastUpdated": "2024-01-15T10:30:00.000Z"
   }

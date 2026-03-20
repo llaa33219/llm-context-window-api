@@ -59,6 +59,7 @@ export default {
             data: {
               name: modelName,
               contextWindow: cached.contextWindow,
+              maxOutputTokens: cached.maxOutputTokens,
               fromCache: true,
               lastUpdated: cached.lastUpdated
             }
@@ -81,6 +82,7 @@ export default {
 
         const cacheData: CachedModel = {
           contextWindow: result.contextWindow,
+          maxOutputTokens: result.maxOutputTokens,
           lastUpdated: new Date().toISOString()
         };
         
@@ -91,6 +93,7 @@ export default {
           data: {
             name: result.name,
             contextWindow: result.contextWindow,
+            maxOutputTokens: result.maxOutputTokens,
             slug: result.slug,
             creator: result.creator,
             fromCache: false

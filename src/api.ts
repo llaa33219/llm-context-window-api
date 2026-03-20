@@ -6,6 +6,9 @@ interface OpenRouterModel {
   id: string;
   name: string;
   context_length: number;
+  top_provider?: {
+    max_completion_tokens?: number;
+  };
 }
 
 let modelsCache: OpenRouterModel[] | null = null;
@@ -35,7 +38,7 @@ export async function fetchAllModels(): Promise<OpenRouterModel[]> {
 
 export async function findModelContextWindow(
   modelName: string
-): Promise<{ contextWindow: number; name: string; slug: string; creator: string } | null> {
+): Promise<{ contextWindow: number; maxOutputTokens?: number; name: string; slug: string; creator: string } | null> {
   const models = await fetchAllModels();
   
   const match = findBestMatch(modelName, models.map(m => ({ name: m.name, slug: m.id })));
@@ -52,6 +55,7 @@ export async function findModelContextWindow(
 
   return {
     contextWindow: model.context_length,
+    maxOutputTokens: model.top_provider?.max_completion_tokens,
     name: model.name,
     slug: model.id,
     creator: model.id.split('/')[0]
